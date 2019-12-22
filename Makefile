@@ -5,12 +5,13 @@ USER_ID := $(shell id -u)
 GROUP_ID := $(shell id -g)
 USER_NAME := user
 
+setup: build
+
 build:
 	docker build \
 		--build-arg USER_ID=$(USER_ID) \
 		--build-arg GROUP_ID=$(GROUP_ID) \
 		--build-arg USER_NAME=$(USER_NAME) \
-		--build-arg CURDIR=$(CURDIR) \
 		-t $(IMAGE_ID) .
 
 bash:
@@ -20,7 +21,9 @@ bash:
 		$(IMAGE_ID) /bin/bash
 
 bash-root:
-	docker run -it $(IMAGE_ID) /bin/bash
+	docker run -it \
+		-v $(CURDIR):/home/$(USER_NAME) \
+		$(IMAGE_ID) /bin/bash
 
 start:
 	docker run -dt \
