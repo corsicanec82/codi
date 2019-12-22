@@ -4,6 +4,7 @@ CONTAINER_ID := $(addsuffix _container, $(ID))
 USER_ID := $(shell id -u)
 GROUP_ID := $(shell id -g)
 USER_NAME := user
+TIMEZONE := $(shell readlink /etc/localtime | sed "s/\/usr\/share\/zoneinfo\///")
 
 setup: build
 
@@ -12,6 +13,7 @@ build:
 		--build-arg USER_ID=$(USER_ID) \
 		--build-arg GROUP_ID=$(GROUP_ID) \
 		--build-arg USER_NAME=$(USER_NAME) \
+		--build-arg TIMEZONE=$(TIMEZONE) \
 		-t $(IMAGE_ID) .
 
 bash:
